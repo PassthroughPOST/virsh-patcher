@@ -4,7 +4,6 @@ from __future__ import print_function
 import os
 import sys
 import argparse
-import importlib
 import subprocess
 from xml.etree import ElementTree as ET
 
@@ -53,7 +52,7 @@ def err(*args, **kwargs):
 
 def load(module):
     modname, klass = module.rsplit('.', 1)
-    x = importlib.__import__(modname, fromlist=[klass])
+    x = __import__(modname, fromlist=[klass])
     return getattr(x, klass)
 
 
