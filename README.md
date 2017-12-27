@@ -17,7 +17,7 @@ Installation
 ---------------
 
 ```
-$ pip install https://github.com/xlevus/virsh-patcher/archive/master.zip
+$ pip install -U https://github.com/PassthroughPOST/virsh-patcher/archive/master.zip
 ```
 
 
