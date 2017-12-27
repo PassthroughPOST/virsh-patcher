@@ -51,3 +51,11 @@ optional arguments:
   --random-vendor-id    Set a random Vendor ID.
 
 ```
+
+Future Improvements
+-----------------------
+
+ * Use libvirt API instead of `virsh edit` hack.
+ * Add ability to connect PCI devices to guest (By name/pattern/id?)
+ * Interactive (?)
+ * More tests.

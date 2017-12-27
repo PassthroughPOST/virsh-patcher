@@ -8,7 +8,6 @@ setup(
     version='1.0.0a1',
     description='Utility to apply common patches to virsh xml files.',
     packages=['virshpatcher'],
-    license='MIT',
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     classifiers=[],
