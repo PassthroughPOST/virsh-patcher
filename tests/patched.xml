@@ -1,0 +1,117 @@
+<domain type="kvm">
+  <name>win10-1</name>
+  <uuid>56607214-b78c-4624-aa55-5770d1a587d5</uuid>
+  <memory unit="KiB">4194304</memory>
+  <currentMemory unit="KiB">4194304</currentMemory>
+  <vcpu placement="static">8</vcpu>
+  <os>
+    <type arch="x86_64" machine="pc-i440fx-2.10">hvm</type>
+    <loader readonly="yes" type="pflash"></loader>
+    <nvram></nvram>
+    <boot dev="hd" />
+  </os>
+  <features>
+    <acpi />
+    <apic />
+    <hyperv>
+      <relaxed state="on" />
+      <vapic state="on" />
+      <spinlocks retries="8191" state="on" />
+    <vendor_id state="on" value="ab1234567890" /></hyperv>
+    <vmport state="off" />
+  <kvm><hidden state="on" /></kvm></features>
+  <cpu check="partial" mode="host-passthrough" /><clock offset="localtime">
+    <timer name="rtc" tickpolicy="catchup" />
+    <timer name="pit" tickpolicy="delay" />
+    <timer name="hpet" present="no" />
+    <timer name="hypervclock" present="yes" />
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <pm>
+    <suspend-to-mem enabled="no" />
+    <suspend-to-disk enabled="no" />
+  </pm>
+  <devices>
+    <emulator></emulator>
+    <disk device="disk" type="block">
+      <driver cache="none" io="native" name="qemu" type="raw" />
+      <source dev="" />
+      <target bus="ide" dev="hda" />
+      <address bus="0" controller="0" target="0" type="drive" unit="0" />
+    </disk>
+    <disk device="cdrom" type="file">
+      <driver name="qemu" type="raw" />
+      <source file="" />
+      <target bus="ide" dev="hdb" />
+      <readonly />
+      <address bus="0" controller="0" target="0" type="drive" unit="1" />
+    </disk>
+    <controller index="0" model="ich9-ehci1" type="usb">
+      <address bus="0x00" domain="0x0000" function="0x7" slot="0x05" type="pci" />
+    </controller>
+    <controller index="0" model="ich9-uhci1" type="usb">
+      <master startport="0" />
+      <address bus="0x00" domain="0x0000" function="0x0" multifunction="on" slot="0x05" type="pci" />
+    </controller>
+    <controller index="0" model="ich9-uhci2" type="usb">
+      <master startport="2" />
+      <address bus="0x00" domain="0x0000" function="0x1" slot="0x05" type="pci" />
+    </controller>
+    <controller index="0" model="ich9-uhci3" type="usb">
+      <master startport="4" />
+      <address bus="0x00" domain="0x0000" function="0x2" slot="0x05" type="pci" />
+    </controller>
+    <controller index="0" model="pci-root" type="pci" />
+    <controller index="0" type="ide">
+      <address bus="0x00" domain="0x0000" function="0x1" slot="0x01" type="pci" />
+    </controller>
+    <controller index="0" type="virtio-serial">
+      <address bus="0x00" domain="0x0000" function="0x0" slot="0x06" type="pci" />
+    </controller>
+    <interface type="bridge">
+      <mac address="52:54:00:81:c8:ec" />
+      <source bridge="br1" />
+      <model type="rtl8139" />
+      <address bus="0x00" domain="0x0000" function="0x0" slot="0x03" type="pci" />
+    </interface>
+    <serial type="pty">
+      <target port="0" type="isa-serial">
+        <model name="isa-serial" />
+      </target>
+    </serial>
+    <console type="pty">
+      <target port="0" type="serial" />
+    </console>
+    <channel type="spicevmc">
+      <target name="com.redhat.spice.0" type="virtio" />
+      <address bus="0" controller="0" port="1" type="virtio-serial" />
+    </channel>
+    <input bus="usb" type="tablet">
+      <address bus="0" port="1" type="usb" />
+    </input>
+    <input bus="ps2" type="mouse" />
+    <input bus="ps2" type="keyboard" />
+    <graphics autoport="yes" type="spice">
+      <listen type="address" />
+      <image compression="off" />
+    </graphics>
+    <sound model="ich6">
+      <address bus="0x00" domain="0x0000" function="0x0" slot="0x04" type="pci" />
+    </sound>
+    <video>
+      <model heads="1" primary="yes" ram="65536" type="qxl" vgamem="16384" vram="65536" />
+      <address bus="0x00" domain="0x0000" function="0x0" slot="0x02" type="pci" />
+    </video>
+    <redirdev bus="usb" type="spicevmc">
+      <address bus="0" port="2" type="usb" />
+    </redirdev>
+    <redirdev bus="usb" type="spicevmc">
+      <address bus="0" port="3" type="usb" />
+    </redirdev>
+    <memballoon model="virtio">
+      <address bus="0x00" domain="0x0000" function="0x0" slot="0x07" type="pci" />
+    </memballoon>
+  </devices>
+<memoryBacking><hugepages /></memoryBacking></domain>
