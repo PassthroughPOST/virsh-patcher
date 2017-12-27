@@ -56,7 +56,7 @@ def main():
     args, remainder = parser.parse_known_args()
 
     patchers = []
-    for path in args.patch:
+    for path in args.patch or []:
         klass = load(path)
         inst = klass(parser)
         patchers.append(inst)
@@ -64,11 +64,16 @@ def main():
     parser.add_argument(
         'file',
         help='XML file to edit, or libvirtd domain.',
+        nargs='?',
         metavar='FILE')
 
     args = parser.parse_args(sys.argv[1:])
     if args.help:
         parser.print_help()
+        exit(1)
+
+    if not args.file:
+        print("No filename or libvirtd domain specified.")
         exit(1)
 
     if os.path.exists(args.file):

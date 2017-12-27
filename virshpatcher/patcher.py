@@ -11,32 +11,36 @@ class XMLPatcher(object):
         pass
 
     def patch(self, tree, args):
-        node = tree.getroot()
+        for patch_set in self.nodes:
+            node = tree.getroot()
 
-        for tag in self.nodes:
-            creator = getattr(
-                self,
-                'create_' + tag,
-                lambda args: (tag, {}))
+            for tag in patch_set:
+                creator = getattr(
+                    self,
+                    'create_' + tag,
+                    lambda args: (tag, {}))
 
-            patcher = getattr(
-                self,
-                'patch_' + tag,
-                lambda args, node: node)
+                patcher = getattr(
+                    self,
+                    'patch_' + tag,
+                    lambda args, node: node)
 
-            new = node.find(tag)
+                new = node.find(tag)
 
-            if new is None:
-                new = ET.SubElement(node, *creator(args))
+                if new is None:
+                    new = ET.SubElement(node, *creator(args))
 
-            patcher(args, new)
-            node = new
+                patcher(args, new)
+                node = new
 
 
 class PatchE43(XMLPatcher):
     DEFAULT_VENDOR_ID = 'ab1234567890'
 
-    nodes = ['features', 'hyperv', 'vendor_id']
+    nodes = [
+        ['features', 'hyperv', 'vendor_id'],
+        ['features', 'kvm', 'hidden'],
+    ]
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -62,13 +66,16 @@ class PatchE43(XMLPatcher):
 
         node.set('value', vendor_id)
 
+    def patch_hidden(self, args, node):
+        node.set('state', 'on')
+
 
 class PatchHugepages(XMLPatcher):
-    nodes = ['memoryBacking', 'hugepages']
+    nodes = [['memoryBacking', 'hugepages']]
 
 
 class PatchHostPassthrough(XMLPatcher):
-    nodes = ['cpu']
+    nodes = [['cpu']]
 
     def patch_cpu(self, args, node):
         node.clear()

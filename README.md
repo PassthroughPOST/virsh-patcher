@@ -5,6 +5,14 @@ Simple utility to apply common changes to libvirtd domain xml files.
 
 Can either edit the xml file directly, or apply the patch via a hack around `virsh edit`.
 
+
+Supported Fixes
+-------------------
+
+ * Error 43 for Nvidia GPUs
+ * Hugepages memory backing
+ * `host-passthrough` CPU type.
+
 Installation
 ---------------
 
@@ -38,5 +46,8 @@ optional arguments:
   --patch PATCH, -p PATCH
                         `XMLPatcher` class path
   --help, -h            This help text
+  --vendor-id ab1234567890
+                        Vendor ID for E43 patch.
+  --random-vendor-id    Set a random Vendor ID.
 
 ```
