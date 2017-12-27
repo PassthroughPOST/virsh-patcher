@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 
 import os
 import sys
@@ -33,7 +34,6 @@ parser.add_argument(
     dest='patch',
     const='virshpatcher.patcher.PatchHostPassthrough')
 
-
 parser.add_argument(
     '--patch', '-p',
     help='`XMLPatcher` class path',
@@ -45,6 +45,11 @@ parser.add_argument(
     help='This help text',
     action='store_true',
     default=False)
+
+
+def err(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 
 def load(module):
     modname, klass = module.rsplit('.', 1)
@@ -67,13 +72,13 @@ def main():
         nargs='?',
         metavar='FILE')
 
-    args = parser.parse_args(sys.argv[1:])
+    args, remainder = parser.parse_known_args(sys.argv[1:])
     if args.help:
         parser.print_help()
         exit(1)
 
     if not args.file:
-        print("No filename or libvirtd domain specified.")
+        err("No filename or libvirtd domain specified.")
         exit(1)
 
     if os.path.exists(args.file):
@@ -83,11 +88,14 @@ def main():
         tree.write(args.file)
 
     else:
-        os.environ['EDITOR'] = " ".join(sys.argv)
+        if args.file != sys.argv[-1]:
+            err("Libvirt domain must be the last argument provided.")
+
+        os.environ['EDITOR'] = " ".join(sys.argv[:-1])
         cmd = ['virsh', 'edit', args.file]
         try:
             ret = subprocess.run(cmd, check=True)
         except Exception as e:
-            print("Unable to edit domain {!r}".format(args.file))
-            print(e)
+            err("Unable to edit domain {!r}".format(args.file))
+            err(e)
             exit(1)
