@@ -1,5 +1,5 @@
-Virsh Patcher
-==================
+Virsh Patcher ![](https://travis-ci.org/PassthroughPOST/virsh-patcher.svg?branch=master)
+===================
 
 Simple utility to apply common changes to libvirtd domain xml files.
 
