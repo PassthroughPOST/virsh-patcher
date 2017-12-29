@@ -1,9 +1,9 @@
 Virsh Patcher ![](https://travis-ci.org/PassthroughPOST/virsh-patcher.svg?branch=master)
 ===================
 
-Simple utility to apply common changes to libvirtd domain xml files.
+Simple utility to apply common changes to libvirtd guests.
 
-Can either edit the xml file directly, or apply the patch via a hack around `virsh edit`.
+Changes will not be applied if the guest is running.
 
 
 Supported Fixes
@@ -36,16 +36,19 @@ $ virshpatcher --error43 --hugepages --host-passthrough win10-guest
 
 ```
 $ virshpatcher --help
-usage: virshpatcher [--error43] [--hugepages] [--host-passthrough]
-                    [--patch PATCH] [--help]
-                    [FILE]
+usage: virshpatcher [--connect URI] [--error43] [--hugepages]
+                    [--host-passthrough] [--patch PATCH] [--help]
+                    [--vendor-id ab1234567890] [--random-vendor-id]
+                    [DOMAIN [DOMAIN ...]]
 
 libvirtd xml patcher
 
 positional arguments:
-  FILE                  XML file to edit, or libvirtd domain.
+  DOMAIN
 
 optional arguments:
+  --connect URI, -c URI
+                        hypervisor connection URI
   --error43             Add fixes for 'error43' with nvidia devices.
   --hugepages           Make guest use hugepages.
   --host-passthrough    Make guest CPU model `host_passthrough`.
@@ -61,7 +64,6 @@ optional arguments:
 Future Improvements
 -----------------------
 
- * Use libvirt API instead of `virsh edit` hack.
  * Add ability to connect PCI devices to guest (By name/pattern/id?)
  * Interactive (?)
  * More tests.

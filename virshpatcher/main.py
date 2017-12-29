@@ -7,10 +7,23 @@ import argparse
 import subprocess
 from xml.etree import ElementTree as ET
 
+import libvirt
+
+RUNNING = {
+    libvirt.VIR_DOMAIN_RUNNING,
+    libvirt.VIR_DOMAIN_PAUSED,
+    libvirt.VIR_DOMAIN_PMSUSPENDED,
+}
 
 parser = argparse.ArgumentParser(
     add_help=False,
     description='libvirtd xml patcher')
+
+parser.add_argument(
+    '--connect', '-c',
+    metavar='URI',
+    help='hypervisor connection URI',
+    default='qemu:///system')
 
 parser.add_argument(
     '--error43',
@@ -66,35 +79,49 @@ def main():
         patchers.append(inst)
 
     parser.add_argument(
-        'file',
-        help='XML file to edit, or libvirtd domain.',
-        nargs='?',
-        metavar='FILE')
+        'domains',
+        metavar='DOMAIN',
+        nargs='*')
 
     args, remainder = parser.parse_known_args(sys.argv[1:])
+
+
     if args.help:
         parser.print_help()
         exit(1)
 
-    if not args.file:
-        err("No filename or libvirtd domain specified.")
+    if not args.domains:
+        err("No domains provided.")
         exit(1)
 
-    if os.path.exists(args.file):
-        tree = ET.parse(args.file)
+    if not patchers:
+        err("No patches provided.")
+        exit(1)
+
+    warning = False
+
+    connection = libvirt.open(args.connect)
+
+    for domain in args.domains:
+
+        dom = connection.lookupByName(domain)
+        state = dom.info()
+
+        if state[0] in RUNNING:
+            warning = True
+            err("Warning: Domain '{}' is running. Not applying changes. ".format(
+                domain))
+            continue
+
+        print("Patching: {}".format(domain))
+        tree = ET.fromstring(dom.XMLDesc(0))
+
         for p in patchers:
+            print("> Applying: {}".format(p.__class__.__name__))
             p.patch(tree, args)
-        tree.write(args.file)
 
-    else:
-        if args.file != sys.argv[-1]:
-            err("Libvirt domain must be the last argument provided.")
+        xml_str = ET.tostring(tree).decode()
+        connection.defineXML(xml_str)
 
-        os.environ['EDITOR'] = " ".join(sys.argv[:-1])
-        cmd = ['virsh', 'edit', args.file]
-        try:
-            ret = subprocess.run(cmd, check=True)
-        except Exception as e:
-            err("Unable to edit domain {!r}".format(args.file))
-            err(e)
-            exit(1)
+    if warning:
+        exit(1)

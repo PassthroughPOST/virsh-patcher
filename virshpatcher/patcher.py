@@ -12,7 +12,7 @@ class XMLPatcher(object):
 
     def patch(self, tree, args):
         for patch_set in self.nodes:
-            node = tree.getroot()
+            node = tree
 
             for tag in patch_set:
                 creator = getattr(
@@ -28,6 +28,8 @@ class XMLPatcher(object):
                 new = node.find(tag)
 
                 if new is None:
+                    if isinstance(node, ET.ElementTree):
+                        node = node.getroot()
                     new = ET.SubElement(node, *creator(args))
 
                 patcher(args, new)
