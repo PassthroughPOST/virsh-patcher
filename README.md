@@ -16,6 +16,12 @@ Supported Fixes
 Installation
 ---------------
 
+### Arch Linux
+Install [virshpatcher](https://aur.archlinux.org/packages/virshpatcher/) from the AUR.
+
+### Others
+Use `pip`:
+
 ```
 $ pip install -U https://github.com/PassthroughPOST/virsh-patcher/archive/master.zip
 ```
