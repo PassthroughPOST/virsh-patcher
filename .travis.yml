@@ -6,14 +6,11 @@ python:
 - '3.4'
 - '3.5'
 - '3.6'
-virtualenv:
-  system_site_packages: true
 
 addons:
   apt:
     packages:
-      - python-libvirt
-      - python3-libvirt
+      - libvirt-dev
 
 install: pip install tox-travis
 
