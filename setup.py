@@ -11,7 +11,7 @@ setup(
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     classifiers=[],
-    install_requires=[],
+    install_requires=['libvirt-python'],
     entry_points={
         'console_scripts': [
             'virshpatcher=virshpatcher.main:main',
