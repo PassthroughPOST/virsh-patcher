@@ -19,12 +19,25 @@ Installation
 ### Arch Linux
 Install [virshpatcher](https://aur.archlinux.org/packages/virshpatcher/) from the AUR.
 
-### Others
-Use `pip`:
+
+### Debian / Ubuntu
 
 ```
-$ pip install -U https://github.com/PassthroughPOST/virsh-patcher/archive/master.zip
+sudo apt-get install python-libvirt
+sudo pip install -U https://github.com/PassthroughPOST/virsh-patcher/archive/master.zip
 ```
+
+### Fedora
+
+```
+$ sudo dnf install libvirt-python
+$ sudo pip install -U https://github.com/PassthroughPOST/virsh-patcher/archive/master.zip
+```
+
+### Other Distributions
+
+The `libvirt-python` package is a dependency. This can be either installed by you distributions
+package manager, or via pip. In the latter case, `libvirt-dev` is required.
 
 
 Usage
